@@ -27,7 +27,7 @@ pub struct SingleCommandInfo {
 impl SingleCommandInfo {
     pub fn new(addr: u16, v: bool, se: bool) -> Self {
         let ioa = InfoObjAddr::new(0, addr);
-        let sco = ObjectSCO::new(v, u1!(0), u5!(0), se);
+        let sco = ObjectSCO::new(se, u5!(0), u1!(0), v);
         SingleCommandInfo {
             ioa,
             sco,
@@ -48,7 +48,7 @@ impl DoubleCommandInfo {
     pub fn new(addr: u16, v: u8, se: bool) -> Self {
         let v = v % 4;
         let ioa = InfoObjAddr::new(0, addr);
-        let dco = ObjectDCO::new(u2::new(v).unwrap(), u5!(0), se);
+        let dco = ObjectDCO::new(se, u5!(0), u2::new(v).unwrap());
         DoubleCommandInfo {
             ioa,
             dco,
@@ -69,7 +69,7 @@ pub struct SetpointCommandNormalInfo {
 impl SetpointCommandNormalInfo {
     pub fn new(addr: u16, v: i16) -> Self {
         let ioa = InfoObjAddr::new(0, addr);
-        let qos = ObjectQOS::new(u7!(0), u1!(0));
+        let qos = ObjectQOS::new(u1!(0), u7!(0));
         SetpointCommandNormalInfo {
             ioa,
             nva: v,
@@ -91,7 +91,7 @@ pub struct SetpointCommandScaledInfo {
 impl SetpointCommandScaledInfo {
     pub fn new(addr: u16, v: i16) -> Self {
         let ioa = InfoObjAddr::new(0, addr);
-        let qos = ObjectQOS::new(u7!(0), u1!(0));
+        let qos = ObjectQOS::new(u1!(0), u7!(0));
         SetpointCommandScaledInfo {
             ioa,
             sva: v,
@@ -112,7 +112,7 @@ pub struct SetpointCommandFloatInfo {
 impl SetpointCommandFloatInfo {
     pub fn new(addr: u16, v: f32) -> Self {
         let ioa = InfoObjAddr::new(0, addr);
-        let qos = ObjectQOS::new(u7!(0), u1!(0));
+        let qos = ObjectQOS::new(u1!(0), u7!(0));
         SetpointCommandFloatInfo {
             ioa,
             r: v,
@@ -143,44 +143,44 @@ impl BitsString32CommandInfo {
 // 单命令 遥控信息
 bit_struct! {
     pub struct ObjectSCO(u8) {
-        scs: bool,  // 控制状态
-        res: u1,    // 预留: 置0
-        qu: u5,     // 输出方式: 0:被控确定, 1:短脉冲, 2:长脉冲, 3:持续脉冲
         se: bool,   // 选择标志: 0:执行, 1:选择
+        qu: u5,     // 输出方式: 0:被控确定, 1:短脉冲, 2:长脉冲, 3:持续脉冲
+        res: u1,    // 预留: 置0
+        scs: bool,  // 控制状态
     }
 }
 
 // 双命令 遥控信息
 bit_struct! {
     pub struct ObjectDCO(u8) {
-        /// 控制状态
-        dcs: u2,
-        /// 输出方式: 0:被控确定, 1:短脉冲, 2:长脉冲, 3:持续脉冲
-        qu: u5,
         /// 选择标志: 0:执行, 1:选择
         se: bool,
+        /// 输出方式: 0:被控确定, 1:短脉冲, 2:长脉冲, 3:持续脉冲
+        qu: u5,
+        /// 控制状态
+        dcs: u2,
     }
 }
 
 // 命令限定词
 bit_struct! {
     pub struct ObjectQOC(u8) {
-        /// 预留：置0
-        res: u2,
-        /// 输出方式: 0:被控确定, 1:短脉冲, 2:长脉冲, 3:持续脉冲
-        qu: u5,
         /// 选择标志: 0:执行, 1:选择
         se: u1,
+        /// 输出方式: 0:被控确定, 1:短脉冲, 2:长脉冲, 3:持续脉冲
+        qu: u5,
+        /// 预留：置0
+        res: u2,
     }
 }
 
 // 设定命令限定词
 bit_struct! {
     pub struct ObjectQOS(u8) {
-        /// 0: 默认 1-63: 预留为标准定义 64-127:特殊使用
-        ql: u7,
         /// 选择标志: 0:执行, 1:选择
         se: u1,
+        /// 0: 默认 1-63: 预留为标准定义 64-127:特殊使用
+        ql: u7,
     }
 }
 
