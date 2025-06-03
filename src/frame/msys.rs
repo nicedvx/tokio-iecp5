@@ -51,7 +51,7 @@ async fn end_of_initialization(
 
 impl Asdu {
     // GetEndOfInitialization get GetEndOfInitialization for asdu when the identification [M_EI_NA_1]
-    fn get_end_of_initialization(&mut self) -> Result<(InfoObjAddr, ObjectCOI)> {
+    pub fn get_end_of_initialization(&mut self) -> Result<(InfoObjAddr, ObjectCOI)> {
         let mut rdr = Cursor::new(&self.raw);
         Ok((
             InfoObjAddr::try_from(u24::new(rdr.read_u24::<LittleEndian>()?).unwrap()).unwrap(),

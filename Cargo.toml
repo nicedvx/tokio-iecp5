@@ -28,3 +28,7 @@ path = "example/client.rs"
 [[example]]
 name = "server"
 path = "example/server.rs"
+
+[[example]]
+name = "parse_104"
+path = "example/parse_104.rs"
